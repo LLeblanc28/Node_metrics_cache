@@ -10,9 +10,9 @@ jobs:
       - name: Setup Node.js
         with:
           node-version: 18
-      - uses: actions/setup-node@v3
-        with:
-          cache: "npm"
+      # - uses: actions/setup-node@v3
+      #   with:
+      #     cache: "npm"
         
       - run: npm ci
       - run: npm run lint
