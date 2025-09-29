@@ -1,5 +1,4 @@
 name: CI/CD Optimized
-
 on: [push, pull_request]
 
 jobs:
@@ -11,63 +10,53 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "npm"
-          cache-dependency-path: "app/package-lock.json"
+          cache: "npm"  # Option 1 : cache intégré à setup-node
       - name: Installer les dépendances
         run: npm ci
-        working-directory: ./app
-      - name: Upload node_modules
-        uses: actions/upload-artifact@v3
-        with:
-          name: node_modules
-          path: app/node_modules
 
   lint:
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Télécharger node_modules
-        uses: actions/download-artifact@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          name: node_modules
-          path: app/node_modules
+          node-version: 18
+          cache: "npm"
       - name: Lint
         run: npm run lint
-        working-directory: ./app
 
   test:
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Télécharger node_modules
-        uses: actions/download-artifact@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          name: node_modules
-          path: app/node_modules
+          node-version: 18
+          cache: "npm"
       - name: Tests
         run: npm test
-        working-directory: ./app
 
   build:
     needs: [lint, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Télécharger node_modules
-        uses: actions/download-artifact@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          name: node_modules
-          path: app/node_modules
+          node-version: 18
+          cache: "npm"
       - name: Build
         run: npm run build
-        working-directory: ./app
       - name: Upload dist/
         uses: actions/upload-artifact@v3
         with:
           name: dist
-          path: app/dist/
+          path: dist/
 
   deploy:
     needs: build
@@ -77,6 +66,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dist
-          path: app/dist/
+          path: dist/
       - name: Simuler le déploiement
-        run: echo "Déploiement avec artifact : contenu de dist/ -> $(ls -la app/dist/)"
+        run: echo "Déploiement avec artifact : contenu de dist/ -> $(ls -la dist/)"
