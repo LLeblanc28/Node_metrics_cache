@@ -1,4 +1,4 @@
-name: CI Suboptimal
+name: CI/CD Optimized
 
 on: [push, pull_request]
 
@@ -13,65 +13,62 @@ jobs:
           node-version: 18
           cache: "npm"
           cache-dependency-path: "app/package-lock.json"
-
       - name: Installer les dépendances
         run: npm ci
         working-directory: ./app
+      - name: Upload node_modules
+        uses: actions/upload-artifact@v3
+        with:
+          name: node_modules
+          path: app/node_modules
 
   lint:
+    needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Télécharger node_modules
+        uses: actions/download-artifact@v3
         with:
-          node-version: 18
-          cache: "npm"
-          cache-dependency-path: "app/package-lock.json"
-
+          name: node_modules
+          path: app/node_modules
       - name: Lint
         run: npm run lint
-        working-directory: ./app 
+        working-directory: ./app
 
   test:
+    needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Télécharger node_modules
+        uses: actions/download-artifact@v3
         with:
-          node-version: 18
-          cache: "npm"
-          cache-dependency-path: "app/package-lock.json"
-
+          name: node_modules
+          path: app/node_modules
       - name: Tests
         run: npm test
-        working-directory: ./app 
+        working-directory: ./app
 
   build:
     needs: [lint, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Télécharger node_modules
         uses: actions/download-artifact@v3
         with:
           name: node_modules
           path: app/node_modules
-          node-version: 18
-          cache: "npm"
-          cache-dependency-path: "app/package-lock.json"
-
       - name: Build
         run: npm run build
-        working-directory: ./app 
+        working-directory: ./app
       - name: Upload dist/
         uses: actions/upload-artifact@v3
         with:
           name: dist
           path: app/dist/
-  
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
