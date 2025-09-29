@@ -13,20 +13,59 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
-          cache-dependency-path: "app/package-lock.json"  # Précise le chemin du fichier de lock
+          cache-dependency-path: "app/package-lock.json"
 
       - name: Installer les dépendances
         run: npm ci
-        working-directory: ./app  # Exécute la commande dans le dossier app/
+        working-directory: ./app
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+          cache-dependency-path: "app/package-lock.json"
 
       - name: Lint
         run: npm run lint
-        working-directory: ./app
+        working-directory: ./app 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+          cache-dependency-path: "app/package-lock.json"
 
       - name: Tests
         run: npm test
-        working-directory: ./app
+        working-directory: ./app 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+          cache-dependency-path: "app/package-lock.json"
 
       - name: Build
         run: npm run build
-        working-directory: ./app
+        working-directory: ./app 
