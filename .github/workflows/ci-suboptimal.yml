@@ -16,7 +16,7 @@ jobs:
           cache-dependency-path: "app/package-lock.json"  # Précise le chemin du fichier de lock
 
       - name: Installer les dépendances
-        run: npm ci
+        run: npm install
         working-directory: ./app  # Exécute la commande dans le dossier app/
 
       - name: Lint
