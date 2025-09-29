@@ -3,7 +3,7 @@ name: CI Suboptimal
 on: [push, pull_request]
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,8 +19,7 @@ jobs:
         run: npm ci
         working-directory: ./app
 
-jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -36,8 +35,7 @@ jobs:
         run: npm run lint
         working-directory: ./app 
 
-jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -53,7 +51,6 @@ jobs:
         run: npm test
         working-directory: ./app 
 
-jobs:
   build:
     runs-on: ubuntu-latest
     steps:
