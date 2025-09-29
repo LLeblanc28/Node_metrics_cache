@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -23,7 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -39,7 +37,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -52,10 +49,10 @@ jobs:
         working-directory: ./app 
 
   build:
+    needs: [lint, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -66,3 +63,20 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: ./app 
+      - name: Upload dist/
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: app/dist/
+  
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Télécharger dist/
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: app/dist/
+      - name: Simuler le déploiement
+        run: echo "Déploiement avec artifact : contenu de dist/ -> $(ls -la app/dist/)"
